@@ -10,7 +10,7 @@ require_once "resources/check_auth.php";
 //additional includes
 require_once "resources/header.php";
 require_once "resources/paging.php";
-require_once __DIR__."/../billing/resources/utils.php";
+require_once __DIR__."/utils.php";
 
 if(isset($_FILES["csv"])) {
 	echo "<pre>";
