@@ -15,7 +15,7 @@ require_once __DIR__."/../billing/resources/utils.php";
 if(isset($_FILES["csv"])) {
 	echo "<pre>";
 	$fp = fopen($_FILES['csv']['tmp_name'], 'r+');
-	while($row = fgetcsv($fp, null, ",") !== FALSE) {
+	while(($row = fgetcsv($fp, null, ",")) !== FALSE) {
 		$contact_uuid = uuid();
 		do_sql($db, "INSERT INTO v_contacts(contact_uuid, domain_uuid, contact_name_given) VALUES (:contact_uuid, :domain_uuid, :contact_name_given)", array(
 			':contact_uuid' => $contact_uuid,
