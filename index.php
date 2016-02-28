@@ -14,7 +14,6 @@ $text = $language->get();
 //additional includes
 require_once "resources/header.php";
 require_once "resources/paging.php";
-require_once __DIR__."/../billing/resources/utils.php";
 ?>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
 	<tr>
@@ -41,7 +40,7 @@ require_once __DIR__."/../billing/resources/utils.php";
 					<tr>
 						<td class="vncellreq" valign="top" align="left" nowrap="nowrap"></td>
 						<td class="vtable" valign="top" align="left" nowrap="nowrap">
-							<input type="submit" value="Slurp Data" />
+							<input type="submit" value="Slurp Data" clas="btn" />
 						</td>
 					</tr>
 				</table>
