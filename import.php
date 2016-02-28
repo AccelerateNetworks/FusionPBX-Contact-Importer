@@ -26,7 +26,7 @@ if(isset($_FILES["csv"])) {
 			':contact_phone_uuid' => uuid(),
 			':domain_uuid' => $domain_uuid,
 			':phone_numer' => $row[0]
-		))
+		));
 	}
 }
 
