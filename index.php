@@ -40,7 +40,7 @@ require_once "resources/paging.php";
 					<tr>
 						<td class="vncellreq" valign="top" align="left" nowrap="nowrap"></td>
 						<td class="vtable" valign="top" align="left" nowrap="nowrap">
-							<input type="submit" value="Slurp Data" clas="btn" />
+							<input type="submit" value="Slurp Data" class="btn" />
 						</td>
 					</tr>
 				</table>
