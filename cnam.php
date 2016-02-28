@@ -11,9 +11,9 @@ $settings = json_decode(file_get_contents(__DIR__."/settings.json"), true);
 
 if(in_array($_SERVER['REMOTE_ADDR'], $settings['authorized_hosts']) && isset($_REQUEST['number'])) {
 	// First check if we already know about them
-	$result = do_sql($db, "SELECT v_contacts.contact_name_given, v_contacts.contact_name_family FROM v_contacts, v_contact_phones WHERE v_contact_phones.contact_uuid = v_contacts.contact_uuid AND v_contact_phones.phone_number = :number LIMIT 1", array(':number' => $_REQUEST['number']));
+	$result = do_sql($db, "SELECT v_contacts.contact_name_given AS fname, v_contacts.contact_name_family AS lname FROM v_contacts, v_contact_phones WHERE v_contact_phones.contact_uuid = v_contacts.contact_uuid AND v_contact_phones.phone_number = :number LIMIT 1", array(':number' => $_REQUEST['number']));
 	if(count($result) > 0) {
-		echo $result['contact_name_given']." ".$result['contact_name_family'];
+		echo $result['fname']." ".$result['lname'];
 	} else {
 		// Gotta do a lookup :/
 		$lookup = new SimpleXMLElement(file_get_contents(sprintf($settings['cnam_api'], $_REQUEST['number'])));
