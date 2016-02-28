@@ -13,6 +13,7 @@ require_once "resources/paging.php";
 require_once __DIR__."/../billing/resources/utils.php";
 
 if(isset($_FILES["csv"])) {
+	echo "<pre>";
 	$fp = fopen($_FILES['csv']['tmp_name'], 'r+');
 	while($row = fgetcsv($fp, null, ",") !== FALSE) {
 		$contact_uuid = uuid();
@@ -27,9 +28,11 @@ if(isset($_FILES["csv"])) {
 			':domain_uuid' => $domain_uuid,
 			':phone_numer' => $row[0]
 		));
+		print_r($row);
 	}
+	echo "</pre>";
+	echo "Well that was inefficient!";
 }
 
-echo "Well that was inefficient!";
 
 require 'footer.php';
