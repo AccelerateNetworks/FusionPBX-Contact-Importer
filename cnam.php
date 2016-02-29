@@ -15,7 +15,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $settings['authorized_hosts']) && isset($_R
 		$number = "1".$_REQUEST['number'];
 	}
 	// First check if we already know about them
-	$result = do_sql($db, "SELECT v_contacts.contact_name_given, v_contacts.contact_name_family FROM v_contacts, v_contact_phones WHERE v_contact_phones.contact_uuid = v_contacts.contact_uuid AND v_contact_phones.phone_number = :number LIMIT 1", array(':number' => $_REQUEST['number']));
+	$result = do_sql($db, "SELECT v_contacts.contact_name_given, v_contacts.contact_name_family FROM v_contacts, v_contact_phones WHERE v_contact_phones.contact_uuid = v_contacts.contact_uuid AND v_contact_phones.phone_number = :number LIMIT 1", array(':number' => $number));
 	if(count($result) > 0) {
 		echo $result[0]['contact_name_given']." ".$result[0]['contact_name_family'];
 	} else {
