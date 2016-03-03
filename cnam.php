@@ -10,6 +10,7 @@ require_once __DIR__."/utils.php";
 $settings = json_decode(file_get_contents(__DIR__."/settings.json"), true);
 
 function do_lookup($number, $domain) {
+	global $db;
 	if(substr($number, 0, 1) != "1") {
 		$number = "1".$number;
 	}
