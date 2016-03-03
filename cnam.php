@@ -21,7 +21,8 @@ function do_lookup($number, $domain, $call_uuid=NULL) {
 	} else {
 		// Gotta do a lookup :/
 		try {
-			$lookup = new SimpleXMLElement(file_get_contents(sprintf($settings['cnam_api'], $number)));
+			$xml = file_get_contents(sprintf($settings['cnam_api'], $number));
+			$lookup = new SimpleXMLElement($xml);
 			$cnam = $lookup->results->result->name;
 			$fname = $cnam;
 			$lname = "";
@@ -45,7 +46,7 @@ function do_lookup($number, $domain, $call_uuid=NULL) {
 			));
 			echo $fname." ".$lname;
 		} catch(Exception $e) {
-			error_log("Exception while looking up CNAM: ".$e->getMessage." call_uuid=".$call_uuid." number=".$number." domain=".$domain);
+			error_log("Exception while looking up CNAM: ".$e->getMessage." call_uuid=".$call_uuid." number=".$number." domain=".$domain." xml=".$xml);
 			echo "UNKNOWN";
 		}
 	}
@@ -65,7 +66,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $settings['authorized_hosts'])) {
 			error_log("Error from freeswitch when getting caller_id_number (".$number.") or domain_uuid (".$domain.") for call ".$_REQUEST['call']);
 			die("UNKNOWN");
 		}
-		do_lookup($number, $domain);
+		do_lookup($number, $domain, $_REQUEST['call']);
 	}
 } else {
 	echo "UNAUTHORIZED";
