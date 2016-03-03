@@ -55,8 +55,8 @@ if(in_array($_SERVER['REMOTE_ADDR'], $settings['authorized_hosts'])) {
 		if (!$fp) {
 			die("ERROR");
 		}
-		$number = trim(event_socket_request($fp, "uuid_getvar ".$_REQUEST['call']." caller_id_number"));
-		$domain = trim(event_socket_request($fp, "uuid_getvar ".$_REQUEST['call']." domain_uuid"));
+		$number = trim(event_socket_request($fp, "api uuid_getvar ".$_REQUEST['call']." caller_id_number"));
+		$domain = trim(event_socket_request($fp, "api uuid_getvar ".$_REQUEST['call']." domain_uuid"));
 		do_lookup($number, $domain);
 	}
 } else {
