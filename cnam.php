@@ -11,6 +11,7 @@ $settings = json_decode(file_get_contents(__DIR__."/settings.json"), true);
 
 function do_lookup($number, $domain, $call_uuid=NULL) {
 	global $db;
+	$number = ltrim($number, '+');
 	if(substr($number, 0, 1) != "1") {
 		$number = "1".$number;
 	}
