@@ -47,7 +47,7 @@ function do_lookup($number, $domain) {
 
 if(in_array($_SERVER['REMOTE_ADDR'], $settings['authorized_hosts'])) {
 	if(isset($_REQUEST['number'])) {
-		do_lookup($_REQUEST['number'], $settings['default_domain'])
+		do_lookup($_REQUEST['number'], $settings['default_domain']);
 	} elseif(isset($_REQUEST['call'])) {
 		$fp = event_socket_create($_SESSION['event_socket_ip_address'], $_SESSION['event_socket_port'], $_SESSION['event_socket_password']);
 		if (!$fp) {
