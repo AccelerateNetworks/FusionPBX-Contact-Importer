@@ -63,6 +63,9 @@ if(in_array($_SERVER['REMOTE_ADDR'], $settings['authorized_hosts'])) {
 		}
 		$number = trim(event_socket_request($fp, "api uuid_getvar ".$_REQUEST['call']." caller_id_number"));
 		$domain = trim(event_socket_request($fp, "api uuid_getvar ".$_REQUEST['call']." domain_uuid"));
+		if(isset($_GET['outbound'])) {
+			$number = trim(event_socket_request($fp, "api uuid_getvar ".$_REQUEST['call']." callee_id_number"));
+		}
 		if(substr($number, 0, 4) == "-ERR" || substr($domain, 0, 4) == "-ERR") {
 			error_log("Error from freeswitch when getting caller_id_number (".$number.") or domain_uuid (".$domain.") for call ".$_REQUEST['call']);
 			die("UNKNOWN");
