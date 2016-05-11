@@ -32,19 +32,21 @@ function do_lookup($number, $domain, $call_uuid=NULL) {
 				$fname = ucfirst($exploded[0]);
 				$lname = ucfirst($exploded[1]);
 			}
-			$contact_uuid = uuid();
-			do_sql($db, "INSERT INTO v_contacts(contact_uuid, domain_uuid, contact_name_given, contact_name_family) VALUES (:contact_uuid, :domain_uuid, :contact_name_given, :contact_name_family)", array(
-				':contact_uuid' => $contact_uuid,
-				':domain_uuid' => $domain,
-				':contact_name_given' => $fname,
-				':contact_name_family' => $lname
-			));
-			do_sql($db, "INSERT INTO v_contact_phones (contact_phone_uuid, domain_uuid, contact_uuid, phone_primary, phone_number) VALUES (:contact_phone_uuid, :domain_uuid, :contact_uuid, 1, :phone_numer)", array(
-				':contact_uuid' => $contact_uuid,
-				':contact_phone_uuid' => uuid(),
-				':domain_uuid' => $domain,
-				':phone_numer' => $number
-			));
+			if(!is_null($domain)) {
+				$contact_uuid = uuid();
+				do_sql($db, "INSERT INTO v_contacts(contact_uuid, domain_uuid, contact_name_given, contact_name_family) VALUES (:contact_uuid, :domain_uuid, :contact_name_given, :contact_name_family)", array(
+					':contact_uuid' => $contact_uuid,
+					':domain_uuid' => $domain,
+					':contact_name_given' => $fname,
+					':contact_name_family' => $lname
+				));
+				do_sql($db, "INSERT INTO v_contact_phones (contact_phone_uuid, domain_uuid, contact_uuid, phone_primary, phone_number) VALUES (:contact_phone_uuid, :domain_uuid, :contact_uuid, 1, :phone_numer)", array(
+					':contact_uuid' => $contact_uuid,
+					':contact_phone_uuid' => uuid(),
+					':domain_uuid' => $domain,
+					':phone_numer' => $number
+				));
+			}
 			echo $fname." ".$lname;
 		} catch(Exception $e) {
 			error_log("Exception while looking up CNAM: ".$e->getMessage." call_uuid=".$call_uuid." number=".$number." domain=".$domain." xml=".$xml);
@@ -66,9 +68,17 @@ if(in_array($_SERVER['REMOTE_ADDR'], $settings['authorized_hosts'])) {
 		if(isset($_GET['outbound'])) {
 			$number = trim(event_socket_request($fp, "api uuid_getvar ".$_REQUEST['call']." callee_id_number"));
 		}
-		if(substr($number, 0, 4) == "-ERR" || substr($domain, 0, 4) == "-ERR") {
-			error_log("Error from freeswitch when getting caller_id_number (".$number.") or domain_uuid (".$domain.") for call ".$_REQUEST['call']);
+		if(substr($number, 0, 4) == "-ERR") {
+			error_log("Error from freeswitch when getting caller_id_number (".$number.") for call ".$_REQUEST['call']);
 			die("UNKNOWN");
+		} if(substr($domain, 0, 4) == "-ERR") {
+			error_log("Error getting domain for call ".$_REQUEST['call']);
+			if(isset($settings['default_domain'])) {
+				$domain = $settings['default_domain'];
+			} else {
+				$domain = NULL;
+				error_log("No default domain! We wont store this result :(");
+			}
 		}
 		do_lookup($number, $domain, $_REQUEST['call']);
 	}
