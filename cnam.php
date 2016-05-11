@@ -21,37 +21,43 @@ function do_lookup($number, $domain, $call_uuid=NULL) {
 		echo $result[0]['contact_name_given']." ".$result[0]['contact_name_family'];
 	} else {
 		// Gotta do a lookup :/
+		$url = sprintf($settings['cnam_api'], $number);
 		try {
-			$xml = file_get_contents(sprintf($settings['cnam_api'], $number));
+			$xml = file_get_contents();
+		} catch (Exception $e) {
+			error_log("Exception while requesting CNAM from provider: ".$e->getMessage()." call_uuid=".$call_uuid." number=".$number." domain=".$domain." url=".$url);
+			die("UNKNOWN");
+		}
+		try {
 			$lookup = new SimpleXMLElement($xml);
 			$cnam = $lookup->results->result->name;
-			$fname = $cnam;
-			$lname = "";
-			$exploded = explode(" ", $cnam);
-			if(count($exploded) == 2) {
-				$fname = ucfirst($exploded[0]);
-				$lname = ucfirst($exploded[1]);
-			}
-			if(!is_null($domain)) {
-				$contact_uuid = uuid();
-				do_sql($db, "INSERT INTO v_contacts(contact_uuid, domain_uuid, contact_name_given, contact_name_family) VALUES (:contact_uuid, :domain_uuid, :contact_name_given, :contact_name_family)", array(
-					':contact_uuid' => $contact_uuid,
-					':domain_uuid' => $domain,
-					':contact_name_given' => $fname,
-					':contact_name_family' => $lname
-				));
-				do_sql($db, "INSERT INTO v_contact_phones (contact_phone_uuid, domain_uuid, contact_uuid, phone_primary, phone_number) VALUES (:contact_phone_uuid, :domain_uuid, :contact_uuid, 1, :phone_numer)", array(
-					':contact_uuid' => $contact_uuid,
-					':contact_phone_uuid' => uuid(),
-					':domain_uuid' => $domain,
-					':phone_numer' => $number
-				));
-			}
-			echo $fname." ".$lname;
 		} catch(Exception $e) {
-			error_log("Exception while looking up CNAM: ".$e->getMessage." call_uuid=".$call_uuid." number=".$number." domain=".$domain." xml=".$xml);
-			echo "UNKNOWN";
+			error_log("Exception parsing CNAM result: ".$e->getMessage()." call_uuid=".$call_uuid." number=".$number." domain=".$domain." url=".$url." response=".$xml);
+			die("UNKNOWN");
 		}
+		$fname = $cnam;
+		$lname = "";
+		$exploded = explode(" ", $cnam);
+		if(count($exploded) == 2) {
+			$fname = ucfirst($exploded[0]);
+			$lname = ucfirst($exploded[1]);
+		}
+		if(!is_null($domain)) {
+			$contact_uuid = uuid();
+			do_sql($db, "INSERT INTO v_contacts(contact_uuid, domain_uuid, contact_name_given, contact_name_family) VALUES (:contact_uuid, :domain_uuid, :contact_name_given, :contact_name_family)", array(
+				':contact_uuid' => $contact_uuid,
+				':domain_uuid' => $domain,
+				':contact_name_given' => $fname,
+				':contact_name_family' => $lname
+			));
+			do_sql($db, "INSERT INTO v_contact_phones (contact_phone_uuid, domain_uuid, contact_uuid, phone_primary, phone_number) VALUES (:contact_phone_uuid, :domain_uuid, :contact_uuid, 1, :phone_numer)", array(
+				':contact_uuid' => $contact_uuid,
+				':contact_phone_uuid' => uuid(),
+				':domain_uuid' => $domain,
+				':phone_numer' => $number
+			));
+		}
+		echo $fname." ".$lname;
 	}
 }
 
