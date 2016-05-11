@@ -23,7 +23,7 @@ function do_lookup($number, $domain, $call_uuid=NULL) {
 		// Gotta do a lookup :/
 		$url = sprintf($settings['cnam_api'], $number);
 		try {
-			$xml = file_get_contents();
+			$xml = file_get_contents($url);
 		} catch (Exception $e) {
 			error_log("Exception while requesting CNAM from provider: ".$e->getMessage()." call_uuid=".$call_uuid." number=".$number." domain=".$domain." url=".$url);
 			die("UNKNOWN");
