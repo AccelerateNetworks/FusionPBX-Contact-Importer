@@ -1,3 +1,4 @@
+
 <?php
 /*
 	GNU Public License
@@ -10,7 +11,7 @@ require_once __DIR__."/utils.php";
 $settings = json_decode(file_get_contents(__DIR__."/settings.json"), true);
 
 function do_lookup($number, $domain, $call_uuid=NULL) {
-	global $db;
+	global $db, $settings;
 	$number = ltrim($number, '+');
 	if(substr($number, 0, 1) != "1") {
 		$number = "1".$number;
@@ -42,20 +43,24 @@ function do_lookup($number, $domain, $call_uuid=NULL) {
 			$fname = ucfirst($exploded[0]);
 			$lname = ucfirst($exploded[1]);
 		}
-		if(!is_null($domain)) {
-			$contact_uuid = uuid();
-			do_sql($db, "INSERT INTO v_contacts(contact_uuid, domain_uuid, contact_name_given, contact_name_family) VALUES (:contact_uuid, :domain_uuid, :contact_name_given, :contact_name_family)", array(
-				':contact_uuid' => $contact_uuid,
-				':domain_uuid' => $domain,
-				':contact_name_given' => $fname,
-				':contact_name_family' => $lname
-			));
-			do_sql($db, "INSERT INTO v_contact_phones (contact_phone_uuid, domain_uuid, contact_uuid, phone_primary, phone_number) VALUES (:contact_phone_uuid, :domain_uuid, :contact_uuid, 1, :phone_numer)", array(
-				':contact_uuid' => $contact_uuid,
-				':contact_phone_uuid' => uuid(),
-				':domain_uuid' => $domain,
-				':phone_numer' => $number
-			));
+		if(!is_null($domain) && $domain != "_undef_") {
+			try {
+				$contact_uuid = uuid();
+				do_sql($db, "INSERT INTO v_contacts(contact_uuid, domain_uuid, contact_name_given, contact_name_family) VALUES (:contact_uuid, :domain_uuid, :contact_name_given, :contact_name_family)", array(
+					':contact_uuid' => $contact_uuid,
+					':domain_uuid' => $domain,
+					':contact_name_given' => $fname,
+					':contact_name_family' => $lname
+				));
+				do_sql($db, "INSERT INTO v_contact_phones (contact_phone_uuid, domain_uuid, contact_uuid, phone_primary, phone_number) VALUES (:contact_phone_uuid, :domain_uuid, :contact_uuid, 1, :phone_numer)", array(
+					':contact_uuid' => $contact_uuid,
+					':contact_phone_uuid' => uuid(),
+					':domain_uuid' => $domain,
+					':phone_numer' => $number
+				));
+			} catch(Exception $e) {
+				error_log("Failed to insert $fname $lname into the database: ".$e->getMessage());
+			}
 		}
 		echo $fname." ".$lname;
 	}
