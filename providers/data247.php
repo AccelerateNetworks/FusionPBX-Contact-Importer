@@ -1,6 +1,7 @@
 <?php
 if(isset($settings['data247'])) {
   $external_lookup_sources['data247'] = function($number) {
+    global $settings;
     try {
       $xml = file_get_contents(sprintf($settings['data247']['url'], $number));
     } catch (Exception $e) {

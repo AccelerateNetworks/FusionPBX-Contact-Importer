@@ -1,6 +1,7 @@
 <?php
 if(isset($settings['ldap'])) {
   $external_lookup_sources['ldap'] = function($number) {
+    global $settings;
     $ds = ldap_connect($settings['ldap']['server']);
     $r = ldap_bind($ds);
     $query = "(|(".implode("=*$number*), (", $settings['ldap']['number_fields'])."=*".$number."*))";
@@ -13,6 +14,7 @@ if(isset($settings['ldap'])) {
       }
       if(isset($settings['ldap']['last_name_field']) && isset($result[$settings['ldap']['last_name_field']])) {
         $result['last_name'] = $result[$settings['ldap']['last_name_field']];
+        $result['effective_caller_id_name'] = $result['first_name']." ".$result['last_name'];
       }
       return $results[0];
     } else {
