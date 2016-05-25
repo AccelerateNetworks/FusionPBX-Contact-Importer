@@ -28,6 +28,7 @@ foreach(scandir("providers/") as $provider) {
 }
 
 function do_external_lookup($number) {
+	global $external_lookup_sources;
 	foreach($external_lookup_sources as $provider=>$lookup_function) {
 		$result = $lookup_function($number);
 		if(isset($_REQUEST['debug'])) {
