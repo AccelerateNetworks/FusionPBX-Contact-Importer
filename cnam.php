@@ -51,7 +51,7 @@ function do_lookup($number, $domain, $call_uuid=NULL) {
 	// First check if we already know about them
 	$result = do_sql($db, "SELECT v_contacts.contact_name_given, v_contacts.contact_name_family FROM v_contacts, v_contact_phones WHERE v_contact_phones.contact_uuid = v_contacts.contact_uuid AND v_contact_phones.phone_number = :number LIMIT 1", array(':number' => $number));
 	if(count($result) > 0) {
-		echo $result[0]['contact_name_given']." ".$result[0]['contact_name_family'];
+		echo trim($result[0]['contact_name_given']." ".$result[0]['contact_name_family']);
 	} else {
 		$cnam = do_external_lookup($number);
 		if(!is_null($domain) && $domain != "_undef_" && trim($cnam) != "") {
