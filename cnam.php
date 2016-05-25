@@ -8,7 +8,24 @@ require_once "root.php";
 require_once "resources/require.php";
 require_once __DIR__."/utils.php";
 
-$settings = json_decode(file_get_contents(__DIR__."/settings.json"), true);
+$settings = array();
+$settings['authorized_hosts'] = array("127.0.0.1");
+
+if(file_exists("./settings.php")) {
+	require_once "./settings.php";
+}
+
+$external_lookup_sources = array();
+
+function do_external_lookup($number) {
+	foreach($external_lookup_sources as $provider=>$lookup_function) {
+		$result = $lookup_function($number);
+		if(is_array($result)) {
+			$result['provider'] = $provider;
+			return $result;
+		}
+	}
+}
 
 function do_lookup($number, $domain, $call_uuid=NULL) {
 	global $db, $settings;
@@ -21,28 +38,7 @@ function do_lookup($number, $domain, $call_uuid=NULL) {
 	if(count($result) > 0) {
 		echo $result[0]['contact_name_given']." ".$result[0]['contact_name_family'];
 	} else {
-		// Gotta do a lookup :/
-		$url = sprintf($settings['cnam_api'], $number);
-		try {
-			$xml = file_get_contents(sprintf($settings['cnam_api'], $number));
-		} catch (Exception $e) {
-			error_log("Exception while requesting CNAM from provider: ".$e->getMessage()." call_uuid=".$call_uuid." number=".$number." domain=".$domain." url=".$url);
-			die("UNKNOWN");
-		}
-		try {
-			$lookup = new SimpleXMLElement($xml);
-			$cnam = $lookup->results->result->name;
-		} catch(Exception $e) {
-			error_log("Exception parsing CNAM result: ".$e->getMessage()." call_uuid=".$call_uuid." number=".$number." domain=".$domain." url=".$url." response=".$xml);
-			die("UNKNOWN");
-		}
-		$fname = $cnam;
-		$lname = "";
-		$exploded = explode(" ", $cnam);
-		if(count($exploded) == 2) {
-			$fname = ucfirst($exploded[0]);
-			$lname = ucfirst($exploded[1]);
-		}
+		$cnam = do_external_lookup($number);
 		if(!is_null($domain) && $domain != "_undef_") {
 			try {
 				$contact_uuid = uuid();
