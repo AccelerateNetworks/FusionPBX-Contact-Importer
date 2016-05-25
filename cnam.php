@@ -17,7 +17,9 @@ if(file_exists("./settings.php")) {
 
 $external_lookup_sources = array();
 foreach(scandir("providers/") as $provider) {
-	require("providers/".$provider);
+	if(is_file("providers/".$provider)) {
+		require("providers/".$provider);
+	}
 }
 
 function do_external_lookup($number) {
