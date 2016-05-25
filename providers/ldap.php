@@ -3,7 +3,7 @@ if(isset($settings['ldap'])) {
   $external_lookup_sources['ldap'] = function($number) {
     $ds = ldap_connect($settings['ldap']['server']);
     $r = ldap_bind($ds);
-    $query = "(|(".implode("), (", $settings['ldap']['number_fields'])."=*".$number."*))";
+    $query = "(|(".implode("=*$number*), (", $settings['ldap']['number_fields'])."=*".$number."*))";
     $sr = ldap_search($ds, $settings['ldap']['ou'], $query);
     $results = ldap_get_entries($ds, $sr);
     if($results['count'] > 0) {
