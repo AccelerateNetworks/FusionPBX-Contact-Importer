@@ -1,6 +1,6 @@
 <?php
 if(isset($settings['ldap'])) {
-  $external_lookup_sources[] = function($number) {
+  $external_lookup_sources['ldap'] = function($number) {
     $ds = ldap_connect($settings['ldap']['server']);
     $r = ldap_bind($ds);
     $query = "(|(".implode("), (", $settings['ldap']['number_fields'])."=*".$number."*))";

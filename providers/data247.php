@@ -1,18 +1,18 @@
 <?php
 if(isset($settings['data247'])) {
-  $external_lookup_sources[] = function($number) {
+  $external_lookup_sources['data247'] = function($number) {
     try {
       $xml = file_get_contents(sprintf($settings['data247']['url'], $number));
     } catch (Exception $e) {
       error_log("Exception while requesting data 24/7: ".$e->getMessage()." call_uuid=".$call_uuid." number=".$number." domain=".$domain." url=".$url);
-      die("UNKNOWN");
+      return false;
     }
     try {
       $lookup = new SimpleXMLElement($xml);
       $cnam = $lookup->results->result->name;
     } catch(Exception $e) {
       error_log("Exception parsing CNAM result: ".$e->getMessage()." call_uuid=".$call_uuid." number=".$number." domain=".$domain." url=".$url." response=".$xml);
-      die("UNKNOWN");
+      return false;
     }
     $fname = $cnam;
     $lname = "";
