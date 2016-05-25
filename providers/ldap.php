@@ -8,7 +8,7 @@ if(isset($settings['ldap'])) {
     if(isset($_REQUEST['debug'])) {error_log("LDAP query: $query");}
     $sr = ldap_search($ds, $settings['ldap']['ou'], $query);
     $results = ldap_get_entries($ds, $sr);
-    if(isset($_REQUEST['debug'])) {error_log("LDAP returned ".$results['count']." results");}
+    if(isset($_REQUEST['debug'])) {error_log("LDAP returned ".var_export($results, true));}
     if($results['count'] > 0) {
       $result = $results[0];
       if(isset($settings['ldap']['first_name_field']) && isset($result[$settings['ldap']['first_name_field']])) {
