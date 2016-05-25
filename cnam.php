@@ -63,7 +63,7 @@ function do_lookup($number, $domain, $call_uuid=NULL) {
 				error_log("Failed to insert $fname $lname into the database: ".$e->getMessage());
 			}
 		}
-		echo $cnam['first_name']." ".$cnam['last_name'];
+		echo trim($cnam['first_name']." ".$cnam['last_name']);
 	}
 }
 
