@@ -19,6 +19,4 @@ if(isset($settings['ldap'])) {
       return false;
     }
   };
-} elseif(isset($_REQUEST['debug'])) {
-  error_log("Not using ldap.php");
 }
