@@ -6,7 +6,7 @@ if(isset($settings['ldap'])) {
     $r = ldap_bind($ds);
     $query = "(|(".implode("=*$number)(", $settings['ldap']['number_fields'])."=*".$number."))";
     if(isset($_REQUEST['debug'])) {error_log("LDAP query: $query");}
-    $sr = ldap_search($ds, $settings['ldap']['ou'], $query);
+    $sr = ldap_search($ds, $settings['ldap']['base_dn'], $query);
     $results = ldap_get_entries($ds, $sr);
     if(isset($_REQUEST['debug'])) {error_log("LDAP returned ".var_export($results, true));}
     if($results['count'] > 0) {
