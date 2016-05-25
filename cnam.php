@@ -9,6 +9,7 @@ require_once __DIR__."/utils.php";
 
 $settings = array();
 $settings['authorized_hosts'] = array("127.0.0.1");
+$settings['caller_id_number'] = "caller_id_number";
 
 if(file_exists("./settings.php")) {
 	if(isset($_REQUEST['debug'])) {
@@ -85,7 +86,7 @@ if(in_array($_SERVER['REMOTE_ADDR'], $settings['authorized_hosts'])) {
 		if (!$fp) {
 			die("ERROR");
 		}
-		$number = trim(event_socket_request($fp, "api uuid_getvar ".$_REQUEST['call']." caller_id_number"));
+		$number = trim(event_socket_request($fp, "api uuid_getvar ".$_REQUEST['call']." ".$settings['caller_id_number']));
 		$domain = trim(event_socket_request($fp, "api uuid_getvar ".$_REQUEST['call']." domain_uuid"));
 		if(isset($_GET['outbound'])) {
 			$number = trim(event_socket_request($fp, "api uuid_getvar ".$_REQUEST['call']." callee_id_number"));
