@@ -1,4 +1,3 @@
-
 <?php
 /*
 	GNU Public License
