@@ -45,8 +45,8 @@ function do_lookup($number, $domain, $call_uuid=NULL) {
 				do_sql($db, "INSERT INTO v_contacts(contact_uuid, domain_uuid, contact_name_given, contact_name_family) VALUES (:contact_uuid, :domain_uuid, :contact_name_given, :contact_name_family)", array(
 					':contact_uuid' => $contact_uuid,
 					':domain_uuid' => $domain,
-					':contact_name_given' => $fname,
-					':contact_name_family' => $lname
+					':contact_name_given' => $cnam['first_name'],
+					':contact_name_family' => $cnam['last_name']
 				));
 				do_sql($db, "INSERT INTO v_contact_phones (contact_phone_uuid, domain_uuid, contact_uuid, phone_primary, phone_number) VALUES (:contact_phone_uuid, :domain_uuid, :contact_uuid, 1, :phone_numer)", array(
 					':contact_uuid' => $contact_uuid,
@@ -58,7 +58,7 @@ function do_lookup($number, $domain, $call_uuid=NULL) {
 				error_log("Failed to insert $fname $lname into the database: ".$e->getMessage());
 			}
 		}
-		echo $fname." ".$lname;
+		echo $cnam['first_name']." ".$cnam['last_name'];
 	}
 }
 
