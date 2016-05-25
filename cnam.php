@@ -39,7 +39,7 @@ function do_lookup($number, $domain, $call_uuid=NULL) {
 		echo $result[0]['contact_name_given']." ".$result[0]['contact_name_family'];
 	} else {
 		$cnam = do_external_lookup($number);
-		if(!is_null($domain) && $domain != "_undef_") {
+		if(!is_null($domain) && $domain != "_undef_" && trim($cnam) != "") {
 			try {
 				$contact_uuid = uuid();
 				do_sql($db, "INSERT INTO v_contacts(contact_uuid, domain_uuid, contact_name_given, contact_name_family) VALUES (:contact_uuid, :domain_uuid, :contact_name_given, :contact_name_family)", array(
