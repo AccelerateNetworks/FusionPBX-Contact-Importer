@@ -30,10 +30,11 @@ foreach(scandir("providers/") as $provider) {
 function do_external_lookup($number) {
 	foreach($external_lookup_sources as $provider=>$lookup_function) {
 		$result = $lookup_function($number);
+		if(isset($_REQUEST['debug'])) {
+			error_log("Got result from $provider for $number: $result");
+		}
+
 		if(is_array($result)) {
-			if(isset($_REQUEST['debug'])) {
-				error_log("Got result from $provider for $number: $result");
-			}
 			$result['provider'] = $provider;
 			return $result;
 		}
