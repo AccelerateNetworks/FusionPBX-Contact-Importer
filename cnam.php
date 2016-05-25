@@ -11,12 +11,18 @@ $settings = array();
 $settings['authorized_hosts'] = array("127.0.0.1");
 
 if(file_exists("./settings.php")) {
+	if(isset($_REQUEST['debug'])) {
+		error_log("Including ./settings.php\n");
+	}
 	require_once "./settings.php";
 }
 
 $external_lookup_sources = array();
 foreach(scandir("providers/") as $provider) {
 	if(is_file("providers/".$provider)) {
+		if(isset($_REQUEST['debug'])) {
+			error_log("Including providers/".$provider."\n");
+		}
 		require("providers/".$provider);
 	}
 }
@@ -25,6 +31,9 @@ function do_external_lookup($number) {
 	foreach($external_lookup_sources as $provider=>$lookup_function) {
 		$result = $lookup_function($number);
 		if(is_array($result)) {
+			if(isset($_REQUEST['debug'])) {
+				error_log("Got result from $provider for $number: $result");
+			}
 			$result['provider'] = $provider;
 			return $result;
 		}
