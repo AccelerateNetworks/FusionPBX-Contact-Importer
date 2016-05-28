@@ -14,10 +14,10 @@ if(isset($settings['ldap'])) {
         $result[$key] = $values[0];
       }
       if(isset($settings['ldap']['first_name_field']) && isset($result[$settings['ldap']['first_name_field']])) {
-        $result['first_name'] = $result[$settings['ldap']['first_name_field']][0];
+        $result['first_name'] = $result[$settings['ldap']['first_name_field']];
       }
       if(isset($settings['ldap']['last_name_field']) && isset($result[$settings['ldap']['last_name_field']])) {
-        $result['last_name'] = $result[$settings['ldap']['last_name_field']][0];
+        $result['last_name'] = $result[$settings['ldap']['last_name_field']];
         $result['effective_caller_id_name'] = $result['first_name']." ".$result['last_name'];
       }
       return $result;
