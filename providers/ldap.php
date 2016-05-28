@@ -11,7 +11,9 @@ if(isset($settings['ldap'])) {
     if(isset($_REQUEST['debug'])) {error_log("LDAP returned ".var_export($results, true));}
     if($results['count'] > 0) {
       foreach($results[0] as $key=>$values) {
-        $result[$key] = $values[0];
+        if(is_array($values)) {
+          $result[$key] = $values[0];
+        }
       }
       if(isset($settings['ldap']['first_name_field']) && isset($result[$settings['ldap']['first_name_field']])) {
         $result['first_name'] = $result[$settings['ldap']['first_name_field']];
