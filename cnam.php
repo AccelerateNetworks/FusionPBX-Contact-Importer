@@ -21,12 +21,24 @@ if(file_exists("./settings.php")) {
 }
 
 $external_lookup_sources = array();
-foreach(scandir("providers/") as $provider) {
-	if(is_file("providers/".$provider)) {
-		if(isset($_REQUEST['debug'])) {
-			error_log("Including providers/".$provider."\n");
+if(isset($settings['providers'])) {
+	// read $settings['providers'] in order, to allow prioritization
+	foreach($settings['providers'] as $provider) {
+		if(is_file("providers/".$provider.".php")) {
+			if(isset($_REQUEST['debug'])) {
+				error_log("Including providers/".$provider.".php\n");
+			}
+			require("providers/".$provider.".php");
 		}
-		require("providers/".$provider);
+	}
+} else {
+	foreach(scandir("providers/") as $provider) {
+		if(is_file("providers/".$provider)) {
+			if(isset($_REQUEST['debug'])) {
+				error_log("Including providers/".$provider."\n");
+			}
+			require("providers/".$provider);
+		}
 	}
 }
 
