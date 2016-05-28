@@ -8,7 +8,7 @@ CNAM_PHP = "http://localhost/app/contact-importer/cnam.php"
 
 def handler(session, args):
     """Do the CID lookup (against our php service...)."""
-    response = urllib2.urlopen("%s?call=%s&format=json&debug" % (CNAM_PHP, session.getVariable("uuid")))
+    response = urllib2.urlopen("%s?call=%s&format=json" % (CNAM_PHP, session.getVariable("uuid")))
     data = json.load(response)
     if "error" in data:
         freeswitch.consoleLog("error", str(data['error']))
