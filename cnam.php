@@ -78,8 +78,6 @@ function do_lookup($number, $domain, $call_uuid=NULL) {
 			} catch(Exception $e) {
 				error_log("Failed to insert $fname $lname into the database: ".$e->getMessage());
 			}
-		} else {
-			$lookup_result['effective_caller_id_name'] = "UNKNOWN";
 		}
 	}
 	return $lookup_result;
