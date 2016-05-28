@@ -20,7 +20,7 @@ if(isset($settings['ldap'])) {
         $result['last_name'] = $result[$settings['ldap']['last_name_field']][0];
         $result['effective_caller_id_name'] = $result['first_name']." ".$result['last_name'];
       }
-      return $results[0];
+      return $result;
     } else {
       return false;
     }
