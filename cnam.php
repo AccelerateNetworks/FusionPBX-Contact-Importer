@@ -35,7 +35,8 @@ function do_external_lookup($number) {
 	foreach($external_lookup_sources as $provider=>$lookup_function) {
 		$external_result = $lookup_function($number);
 		if(isset($_REQUEST['debug'])) {
-			error_log("Got result from $provider for $number: $external_result");
+			error_log("Got result from $provider for $number.");
+			error_log(print_r($external_result, true));
 		}
 
 		if(is_array($external_result)) {
