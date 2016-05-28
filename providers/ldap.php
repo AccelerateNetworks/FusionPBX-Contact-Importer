@@ -21,6 +21,7 @@ if(isset($settings['ldap'])) {
       if(isset($settings['ldap']['last_name_field']) && isset($result[$settings['ldap']['last_name_field']])) {
         $result['last_name'] = $result[$settings['ldap']['last_name_field']];
         $result['effective_caller_id_name'] = $result['first_name']." ".$result['last_name'];
+        $result['caller_id_name'] = $result['first_name']." ".$result['last_name'];
       }
       return $result;
     } else {
