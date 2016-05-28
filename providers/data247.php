@@ -10,7 +10,7 @@ if(isset($settings['data247'])) {
     }
     try {
       $lookup = new SimpleXMLElement($xml);
-      $cnam = $lookup->results->result->name;
+      $cnam = trim($lookup->results->result->name);
     } catch(Exception $e) {
       error_log("Exception parsing CNAM result: ".$e->getMessage()." call_uuid=".$call_uuid." number=".$number." domain=".$domain." url=".$url." response=".$xml);
       return false;
