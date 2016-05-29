@@ -23,6 +23,7 @@ if(isset($settings['ldap'])) {
         $result['effective_caller_id_name'] = $result['first_name']." ".$result['last_name'];
         $result['caller_id_name'] = $result['first_name']." ".$result['last_name'];
       }
+      $result['provider'] = "University of Washington Directory";
       return $result;
     } else {
       return false;

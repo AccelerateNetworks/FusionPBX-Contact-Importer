@@ -51,7 +51,7 @@ function do_external_lookup($number) {
 			error_log(print_r($external_result, true));
 		}
 
-		if(is_array($external_result)) {
+		if(is_array($external_result) && !isset($external_result['provider'])) {
 			$external_result['provider'] = $provider;
 			return $external_result;
 		}
@@ -74,12 +74,14 @@ function do_lookup($number, $domain, $call_uuid=NULL) {
 		$lookup_result = do_external_lookup($number);
 		if(!is_null($domain) && $domain != "_undef_" && trim($cnam) != "") {
 			try {
+				$note = "Automatically added by the Contact Importer. Data from ".$lookup_result['provider'];
 				$contact_uuid = uuid();
-				do_sql($db, "INSERT INTO v_contacts(contact_uuid, domain_uuid, contact_name_given, contact_name_family) VALUES (:contact_uuid, :domain_uuid, :contact_name_given, :contact_name_family)", array(
+				do_sql($db, "INSERT INTO v_contacts(contact_uuid, domain_uuid, contact_name_given, contact_name_family, contact_note) VALUES (:contact_uuid, :domain_uuid, :contact_name_given, :contact_name_family, :note)", array(
 					':contact_uuid' => $contact_uuid,
 					':domain_uuid' => $domain,
 					':contact_name_given' => $lookup_result['first_name'],
-					':contact_name_family' => $lookup_result['last_name']
+					':contact_name_family' => $lookup_result['last_name'],
+					':note' => $note
 				));
 				do_sql($db, "INSERT INTO v_contact_phones (contact_phone_uuid, domain_uuid, contact_uuid, phone_primary, phone_number) VALUES (:contact_phone_uuid, :domain_uuid, :contact_uuid, 1, :phone_numer)", array(
 					':contact_uuid' => $contact_uuid,
