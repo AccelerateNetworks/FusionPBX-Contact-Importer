@@ -22,6 +22,6 @@ if(isset($settings['data247'])) {
       $fname = ucfirst($exploded[0]);
       $lname = ucfirst($exploded[1]);
     }
-    return array("first_name" => $fname, "last_name" => $lname);
+    return array("first_name" => $fname, "last_name" => $lname, "effective_caller_id_name" => $cnam);
   };
 }
